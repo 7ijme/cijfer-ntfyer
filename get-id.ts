@@ -8,6 +8,7 @@ declare global {
 			SCHOOL: string; 
 			USERNAME: string;
 			PASSWORD: string;
+			ID: string;
 		}
   }
 }
@@ -22,6 +23,10 @@ async function main() {
     username: process.env.USERNAME,
     password: process.env.PASSWORD,
   });
-	console.log(user.idToken);
+	const students = await user.getStudents();
+	const schools = await somtoday.getOrganizations();
+	console.log(schools.filter(s => s.name == "CVO Groep Zuidoost-Utrecht")[0]);
+	console.log(user.accessToken);
+	console.log(students[0].id);
 }
 main();
