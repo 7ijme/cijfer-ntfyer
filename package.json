@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "somtoday.js": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12"
+  }
+}
