@@ -2,6 +2,7 @@ import axios from "axios";
 import somtoday from "somtoday.js";
 import dotenv from "dotenv";
 import fs from "fs";
+import { profile } from "console";
 
 dotenv.config();
 declare global {
@@ -11,6 +12,8 @@ declare global {
       USERNAME: string;
       PASSWORD: string;
       ID: string;
+			NTFY_URL: string;
+			TOPIC: string;
     }
   }
 }
@@ -71,9 +74,9 @@ async function main() {
       console.log(`Nieuw cijfer: ${cijfer.vak} - ${cijfer.cijfer}`);
       // ntfy post request
       await axios.post(
-        "https://tijmevh.nl:8080",
+        process.env.NTFY_URL,
         {
-          topic: "cijfer",
+          topic: process.env.TOPIC,
           message: `Je hebt een ${cijfer.cijfer} voor ${cijfer.naam}`,
         },
         {
@@ -86,9 +89,9 @@ async function main() {
       console.log(`Nieuw cijfer: ${cijfer.vak} - ${cijfer.cijfer}`);
       // ntfy post request
       await axios.post(
-        "https://tijmevh.nl:8080",
+        process.env.NTFY_URL,
         {
-          topic: "cijfer",
+          topic: process.env.TOPIC,
           message: `Je cijfer is veranderd van ${oldCijfer.cijfer} naar ${cijfer.cijfer} voor ${cijfer.naam}`,
         },
         {
