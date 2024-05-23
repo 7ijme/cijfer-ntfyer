@@ -1,6 +1,7 @@
 import axios from "axios";
 import somtoday from "somtoday.js";
 import dotenv from "dotenv";
+import fs from "fs";
 
 dotenv.config();
 declare global {
@@ -60,7 +61,46 @@ async function main() {
     if (data.items.length < 100) break;
   }
 
-  console.log(cijfers);
+  const oldData = JSON.parse(
+    fs.readFileSync("cijfers.json", "utf-8"),
+  ) as Cijfer[];
+
+  for (const cijfer of cijfers) {
+    const oldCijfer = oldData.find((oldCijfer) => oldCijfer.id === cijfer.id);
+    if (!oldCijfer) {
+      console.log(`Nieuw cijfer: ${cijfer.vak} - ${cijfer.cijfer}`);
+      // ntfy post request
+      await axios.post(
+        "https://tijmevh.nl:8080",
+        {
+          topic: "cijfer",
+          message: `Je hebt een ${cijfer.cijfer} voor ${cijfer.naam}`,
+        },
+        {
+          headers: {
+            title: `Nieuw cijfer voor ${cijfer.vak}`,
+          },
+        },
+      );
+    } else if (oldCijfer.cijfer !== cijfer.cijfer) {
+      console.log(`Nieuw cijfer: ${cijfer.vak} - ${cijfer.cijfer}`);
+      // ntfy post request
+      await axios.post(
+        "https://tijmevh.nl:8080",
+        {
+          topic: "cijfer",
+          message: `Je cijfer is veranderd van ${oldCijfer.cijfer} naar ${cijfer.cijfer} voor ${cijfer.naam}`,
+        },
+        {
+          headers: {
+            Title: `Nieuw cijfer voor ${cijfer.vak}`,
+          },
+        },
+      );
+    }
+  }
+
+  fs.writeFileSync("cijfers.json", JSON.stringify(cijfers, null, 2));
 }
 
 main();
