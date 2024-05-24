@@ -4,9 +4,14 @@
 This simple TypeScript project will notify you when a new grade is available. It
 uses [ntfy](https://ntfy.sh) to send notifications to your phone.
 
-Make sure you have nvm installed with node version 20.
+## Why?
+Previously, I only reveiced notifications after a couple of hours when a new grade was available. Now, you'll know within 10 minutes how bad you did.
 
 ## How to use?
+Make sure you have nvm installed with node version 20.
+
+You can either use your own ntfy server or use the public one. If you want to use the public one, make sure you choose a unique id. If you don't, other people might receive your notifications.
+
 1. Clone this repository
 ```bash
 git clone https://github.com/7ijme/cijfer-ntfyer.git

@@ -2,7 +2,6 @@ import axios from "axios";
 import somtoday from "somtoday.js";
 import dotenv from "dotenv";
 import fs from "fs";
-import { profile } from "console";
 
 dotenv.config();
 declare global {
