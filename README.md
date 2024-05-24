@@ -25,3 +25,5 @@ npm install
 ```
 
 You should be good to go! You will now receive a notification when a new grade is available.
+
+Note: The first time you run the script, you will receive a notification for every grade that is available. This is because the script doesn't know which grades you have already received a notification for. After the first run, you will only receive notifications for new grades. Comment out the axios request for ntfy in index.ts if you don't want to receive notifications for every grade.
