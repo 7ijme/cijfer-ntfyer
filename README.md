@@ -23,7 +23,7 @@ npm install
 ```
 3. Find your school's name in schools.json
 4. Copy .env.example to .env and fill in the required fields
-5. Run ts-node get-id.ts to get your personal id. Add this to your .env file.
+5. Run `ts-node get-id.ts` to get your personal id. Add this to your .env file.
 6. Create a cronjob to run the script every 10 minutes
 ```bash
 */10 * * * * /path/to/cijfer-ntfyer/run.sh
