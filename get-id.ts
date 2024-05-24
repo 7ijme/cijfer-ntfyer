@@ -24,7 +24,6 @@ async function main() {
     password: process.env.PASSWORD,
   });
 	const students = await user.getStudents();
-	const schools = await somtoday.getOrganizations();
 	console.log("Add this to your .env file: ID=" + students[0].id)
 }
 main();
