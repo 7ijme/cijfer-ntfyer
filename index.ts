@@ -85,7 +85,7 @@ async function main() {
         },
       );
     } else if (oldCijfer.cijfer !== cijfer.cijfer) {
-      console.log(`Nieuw cijfer: ${cijfer.vak} - ${cijfer.cijfer}`);
+      console.log(`Gewijzigd cijfer: ${cijfer.vak} - ${cijfer.cijfer}`);
       // ntfy post request
       await axios.post(
         process.env.NTFY_URL,
@@ -101,6 +101,8 @@ async function main() {
       );
     }
   }
+
+	if (cijfers === oldData) console.log("Geen nieuwe cijfers");
 
   fs.writeFileSync("cijfers.json", JSON.stringify(cijfers, null, 2));
 }
