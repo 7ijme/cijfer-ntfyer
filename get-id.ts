@@ -1,5 +1,6 @@
 import somtoday from "somtoday.js";
 import dotenv from 'dotenv';
+import fs from "fs";
 
 dotenv.config();
 declare global {
