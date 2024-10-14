@@ -22,11 +22,20 @@ async function main() {
     name: process.env.SCHOOL,
   });
   if (!org) throw new Error("School not found");
-  const user = await org.authenticate({
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
-  });
+
+  let user;
+  if (process.env.METHOD == "token") {
+    user = await org.authenticate(fs.readFileSync("refresh_token", "utf-8").trim());
+    await user.authenticated;
+    fs.writeFileSync("refresh_token", user.refreshToken);  
+  } else {
+    user = await org.authenticate({
+      username: process.env.USERNAME,
+      password: process.env.PASSWORD,
+    });
+  }
   const token = user.accessToken;
+
 
   const cijfers: Cijfer[] = [];
   let i = 0;
