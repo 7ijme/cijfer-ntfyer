@@ -63,9 +63,9 @@ async function main() {
     if (data.items.length < 100) break;
   }
 
-  const oldData = JSON.parse(
+  const oldData = fs.existsSync("cijfers.json") ? JSON.parse(
     fs.readFileSync("cijfers.json", "utf-8"),
-  ) as Cijfer[];
+  ) : [] as Cijfer[];
 
   for (const cijfer of cijfers) {
     const oldCijfer = oldData.find((oldCijfer) => oldCijfer.id === cijfer.id);
