@@ -1,9 +1,6 @@
-import axios from "axios";
-import somtoday from "somtoday.js";
-import dotenv from "dotenv";
-import fs from "fs";
+import axios from "npm:axios";
+import somtoday from "npm:somtoday.js";
 
-dotenv.config();
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -11,20 +8,20 @@ declare global {
       USERNAME: string;
       PASSWORD: string;
       ID: string;
-			NTFY_URL: string;
-			TOPIC: string;
+      NTFY_URL: string;
+      TOPIC: string;
     }
   }
 }
 
 async function main() {
-  const org = await somtoday.searchOrganisation({
-    name: process.env.SCHOOL,
+  const org = await somtoday.default.searchOrganisation({
+    name: Deno.env.get("SCHOOL"),
   });
   if (!org) throw new Error("School not found");
   const user = await org.authenticate({
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
+    username: Deno.env.get("USERNAME")!,
+    password: Deno.env.get("PASSWORD")!,
   });
   const token = user.accessToken;
 
@@ -35,7 +32,7 @@ async function main() {
     // /rest/v1/resultaten/huidigVoorLeerling/[id]
 
     const res = await axios.get(
-      `https://api.somtoday.nl/rest/v1/resultaten/huidigVoorLeerling/${process.env.ID}`,
+      `https://api.somtoday.nl/rest/v1/resultaten/huidigVoorLeerling/${Deno.env.get("ID")}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -63,9 +60,8 @@ async function main() {
     if (data.items.length < 100) break;
   }
 
-  const oldData = JSON.parse(
-    fs.readFileSync("cijfers.json", "utf-8"),
-  ) as Cijfer[];
+  // use enmap instead of json file
+  const oldData = JSON.parse(Deno.readTextFileSync("cijfers.json")) as Cijfer[];
 
   for (const cijfer of cijfers) {
     const oldCijfer = oldData.find((oldCijfer) => oldCijfer.id === cijfer.id);
@@ -73,9 +69,9 @@ async function main() {
       console.log(`Nieuw cijfer: ${cijfer.vak} - ${cijfer.cijfer}`);
       // ntfy post request
       await axios.post(
-        process.env.NTFY_URL,
+        Deno.env.get("NTFY_URL")!,
         {
-          topic: process.env.TOPIC,
+          topic: Deno.env.get("TOPIC"),
           message: `Je hebt een ${cijfer.cijfer} voor ${cijfer.naam}`,
         },
         {
@@ -88,9 +84,9 @@ async function main() {
       console.log(`Gewijzigd cijfer: ${cijfer.vak} - ${cijfer.cijfer}`);
       // ntfy post request
       await axios.post(
-        process.env.NTFY_URL,
+        Deno.env.get("NTFY_URL")!,
         {
-          topic: process.env.TOPIC,
+          topic: Deno.env.get("TOPIC"),
           message: `Je cijfer is veranderd van ${oldCijfer.cijfer} naar ${cijfer.cijfer} voor ${cijfer.naam}`,
         },
         {
@@ -102,9 +98,9 @@ async function main() {
     }
   }
 
-	if (cijfers === oldData) console.log("Geen nieuwe cijfers");
+  if (cijfers === oldData) console.log("Geen nieuwe cijfers");
 
-  fs.writeFileSync("cijfers.json", JSON.stringify(cijfers, null, 2));
+  Deno.writeTextFileSync("cijfers.json", JSON.stringify(cijfers, null, 2));
 }
 
 main();
