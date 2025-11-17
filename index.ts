@@ -60,7 +60,6 @@ async function main() {
     if (data.items.length < 100) break;
   }
 
-  // use enmap instead of json file
   const oldData = JSON.parse(Deno.readTextFileSync("cijfers.json")) as Cijfer[];
 
   for (const cijfer of cijfers) {
