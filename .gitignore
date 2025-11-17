@@ -3,3 +3,4 @@
 *.env
 cijfers.json
 index.js
+refresh_token

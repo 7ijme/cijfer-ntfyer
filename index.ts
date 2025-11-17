@@ -1,5 +1,10 @@
+import { load } from "jsr:@std/dotenv";
 import axios from "npm:axios";
 import somtoday from "npm:somtoday.js";
+
+await load({
+  export: true,
+});
 
 declare global {
   namespace NodeJS {
@@ -15,14 +20,28 @@ declare global {
 }
 
 async function main() {
+  console.log(Deno.env.get("METHOD"));
   const org = await somtoday.default.searchOrganisation({
     name: Deno.env.get("SCHOOL"),
   });
+  console.log("Found school:", org?.name);
   if (!org) throw new Error("School not found");
-  const user = await org.authenticate({
-    username: Deno.env.get("USERNAME")!,
-    password: Deno.env.get("PASSWORD")!,
-  });
+  let user;
+  if (Deno.env.get("METHOD") == "token") {
+    console.log("Authenticating with refresh token");
+    user = await org.authenticate(
+      Deno.readTextFileSync("refresh_token").trim(),
+    );
+    await user.authenticated;
+    Deno.writeTextFileSync("refresh_token", user.refreshToken);
+  } else {
+    user = await org.authenticate({
+      username: Deno.env.get("USERNAME")!,
+      password: Deno.env.get("PASSWORD")!,
+    });
+  }
+  console.log("Authenticated");
+
   const token = user.accessToken;
 
   const cijfers: Cijfer[] = [];
