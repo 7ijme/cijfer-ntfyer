@@ -19,7 +19,7 @@ cd cijfer-ntfyer
 ```
 2. Install dependencies
 ```bash
-npm install
+deno install
 ```
 3. Find your school's name in schools.json
 4. Copy .env.example to .env and fill in the required fields
