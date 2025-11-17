@@ -23,8 +23,9 @@ deno install
 ```
 3. Find your school's name in schools.json
 4. Copy .env.example to .env and fill in the required fields
-5. Run `ts-node get-id.ts` to get your personal id. Add this to your .env file.
-6. Create a cronjob to run the script every 10 minutes
+5. When METHOD is set to "token" (for SSO), it'll try to authenticate using a refresh token from the "refresh_token" file, you can obtain a refresh_token using a tool like [STAP](https://github.com/MattterSteege/SomtodayProxy).
+6. Run `ts-node get-id.ts` to get your personal id. Add this to your .env file.
+7. Create a cronjob to run the script every 10 minutes
 ```bash
 */10 * * * * /path/to/cijfer-ntfyer/run.sh
 ```
