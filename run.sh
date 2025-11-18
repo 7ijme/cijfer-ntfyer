@@ -1,8 +1,14 @@
 #!/bin/bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-nvm use 20 --silent
+# deno shell setup; adapted from rustup
+# affix colons on either side of $PATH to simplify matching
+case ":${PATH}:" in
+    *:"/home/tijme/.deno/bin":*)
+        ;;
+    *)
+        # Prepending path in case a system-installed deno executable needs to be overridden
+        export PATH="/home/tijme/.deno/bin:$PATH"
+        ;;
+esac
 cd $(dirname $0)
-ts-node ./index.ts
+deno run dev
 cd --
